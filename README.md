@@ -11,3 +11,8 @@ O presente projeto back-end possui como objetivo fornecer:
 Tudo sendo feito de modo simplista para proporcionar o estudo aprimorado dos principais framework:
  - Django
  - Django REST Framework
+
+## Front-end da Aplicação
+
+Na Verdade esse é o back-End de uma applicação Mobile em [Ionic](https://github.com/PGabriel-MB/taskList_Ionic).
+Embora seja mobile, a aplicação foi construída em Angular.
