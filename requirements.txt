@@ -1,6 +1,0 @@
-django
-django-model-utils
-django-rest-auth[with-social]
-django-allauth
-django-extended-choices
-django-cors-headers
