@@ -1,6 +1,8 @@
 from flask import Flask, json, Response, request
 
 from database.db import initialize_db
+from models.User import User
+
 
 app = Flask(__name__)
 
@@ -10,8 +12,13 @@ app.config['MONGODB_SETTINGS'] = {
 
 initialize_db(app)
 
+@app.route('/')
+def home():
+    usuarios = User.objects.all()
+    return Response(usuarios, mimetype="application/json", status=200)
 
-@app.route('/movies', methods=["POST"])
+
+""" @app.route('/movies', methods=["POST"])
 def add_movie():
     movie = request.get_json()
     movies.append(movie)
@@ -28,7 +35,7 @@ def update_movie(index):
 @app.route('/movies/<int:index>', methods=["DELETE"])
 def delete_movie(index):
     movies.pop(index)
-    return 'None', 200
+    return 'None', 200 """
 
 
 app.run()
