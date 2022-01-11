@@ -1,4 +1,5 @@
-from mongoengine.queryset.transform import update
+from flask_bcrypt import check_password_hash, generate_password_hash
+
 from database.db import db
 from .Base import BaseModel
 
@@ -11,3 +12,11 @@ class User(BaseModel):
     task_lists = db.ListField(
         db.ReferenceField('TaskList', revese_delete_rule=db.CASCADE)
     )
+
+
+    def hash_password(self):
+        self.password = generate_password_hash(self.password).decode('utf8')
+    
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)

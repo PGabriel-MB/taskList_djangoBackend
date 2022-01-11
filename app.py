@@ -1,10 +1,15 @@
-from flask import Flask, json, Response, request
+from flask import Flask, Response
+from flask_bcrypt import Bcrypt
+from flask_restful  import Api
 
 from database.db import initialize_db
+from resources.routes import initialize_routes
 from models.User import User
 
 
 app = Flask(__name__)
+api = Api(app)
+bcrypt = Bcrypt(app)
 
 app.config['MONGODB_SETTINGS'] = {
     'host': 'mongodb+srv://adminPGabriel:adminPGabriel@cluster0.pgpdg.mongodb.net/taskListIonic?retryWrites=true&w=majority"'
@@ -18,24 +23,6 @@ def home():
     return Response(usuarios, mimetype="application/json", status=200)
 
 
-""" @app.route('/movies', methods=["POST"])
-def add_movie():
-    movie = request.get_json()
-    movies.append(movie)
-    return {'id': len(movies)}, 200
-
-
-@app.route('/movies/<int:index>', methods=["PUT"])
-def update_movie(index):
-    movie = request.get_json()
-    movies[index] = movie
-    return jsonify(movies[index]), 200
-
-
-@app.route('/movies/<int:index>', methods=["DELETE"])
-def delete_movie(index):
-    movies.pop(index)
-    return 'None', 200 """
-
+initialize_routes(api)
 
 app.run()
