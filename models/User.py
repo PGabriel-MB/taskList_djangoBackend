@@ -10,7 +10,8 @@ class User(BaseModel):
     password = db.StringField(required=True, min_length=6)
 
     task_lists = db.ListField(
-        db.ReferenceField('TaskList', revese_delete_rule=db.CASCADE)
+        db.ReferenceField('TaskList', revese_delete_rule=db.CASCADE),
+        required=False
     )
 
 
