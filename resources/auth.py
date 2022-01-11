@@ -1,5 +1,8 @@
-from flask import request
+from os import access
+from flask import request, Response, jsonify
 from flask_restful import Resource
+from flask_jwt_extended import create_access_token
+import datetime
 
 from models.User import User
 
@@ -7,9 +10,8 @@ from models.User import User
 class SignUpApi(Resource):
 
     def is_valid_email(self, email):
-        name, dom = email.split('@')
 
-        if not name or not dom:
+        if not'@' in email:
             return False
         
         return True
@@ -26,14 +28,32 @@ class SignUpApi(Resource):
         if not self.is_valid_email(email):
             return {'error': 'make sure if yor email is correct'}, 400
 
-        if len(password):
+        if len(password) < 7:
             return {'error': 'The password is too small - minimun of 8 caracteres'}, 400
         
 
-        """ user = User(**body)
+        user = User(**body)
         user.hash_password()
         user.save()
         id = user.id
 
-        return {'id': str(id)}, 200 """
-        return {'teste': 'testado'}
+        return {'id': str(id)}, 200
+
+
+class SignInApi(Resource):
+    def post(self):
+        body = request.get_json()
+        user = User.objects.get(email=body.get('email'))
+        authorized = user.check_password(body.get('password'))
+
+        if not authorized:
+            return {'error': 'Email or password invalid'}, 401
+        
+        expires = datetime.timedelta(days=7)
+        access_token = create_access_token(identity=str(user.id), expires_delta=expires)
+        return Response({
+            'token': access_token,
+            'user': user,
+            'isAuthenticated': True
+        }, mimetype="application/json", status=200)
+        #return {'token': access_token, 'user': jsonify(user), 'isAuthnticated': True}, 200

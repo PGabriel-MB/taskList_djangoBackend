@@ -6,7 +6,7 @@ from .Base import BaseModel
 
 class User(BaseModel):
     name = db.StringField(required=True, unique=True)
-    email = db.EmailField(requred=True)
+    email = db.EmailField(requred=True, unique=True)
     password = db.StringField(required=True, min_length=6)
 
     task_lists = db.ListField(
