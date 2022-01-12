@@ -1,5 +1,5 @@
 from os import access
-from flask import request, Response, jsonify
+from flask import json, request, Response, jsonify
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token
 import datetime
@@ -43,7 +43,11 @@ class SignUpApi(Resource):
 class SignInApi(Resource):
     def post(self):
         body = request.get_json()
-        user = User.objects.get(email=body.get('email'))
+        user = User.objects(email=body.get('email')).first()
+
+        if not user:
+            return {'error': 'Unidentified user'}
+
         authorized = user.check_password(body.get('password'))
 
         if not authorized:
@@ -51,9 +55,10 @@ class SignInApi(Resource):
         
         expires = datetime.timedelta(days=7)
         access_token = create_access_token(identity=str(user.id), expires_delta=expires)
-        return Response({
+
+        obj = {
             'token': access_token,
             'user': user,
             'isAuthenticated': True
-        }, mimetype="application/json", status=200)
-        #return {'token': access_token, 'user': jsonify(user), 'isAuthnticated': True}, 200
+        }
+        return Response(json.dumps(obj), mimetype="application/json", status=200)
