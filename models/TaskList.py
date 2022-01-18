@@ -1,6 +1,5 @@
 from database.db import db
 from .Base import BaseModel
-from .User import User
 
 class TaskList(BaseModel):
     name = db.StringField(required=True)
@@ -8,3 +7,5 @@ class TaskList(BaseModel):
     tasks = db.ListField(
         db.ReferenceField('Task', reverse_delete_rule=db.CASCADE)
     )
+
+    created_by = db.ReferenceField('User')

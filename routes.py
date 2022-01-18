@@ -1,5 +1,5 @@
-from .task import TaskApi, TasksApi
-from .auth import SignUpApi, SignInApi
+from .resources.task import TaskApi, TasksApi
+from .resources.auth import SignUpApi, SignInApi
 
 
 def initialize_routes(api):

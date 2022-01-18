@@ -32,9 +32,14 @@ class SignUpApi(Resource):
             return {'error': 'The password is too small - minimun of 8 caracteres'}, 400
         
 
-        user = User(**body)
-        user.hash_password()
-        user.save()
+        try:
+            user = User(**body)
+            user.hash_password()
+            user.save()
+        
+        except Exception as err:
+            return {'message': 'There was an error saving your data!', 'error': f'{err.args}'}
+
         id = user.id
 
         return {'id': str(id)}, 200

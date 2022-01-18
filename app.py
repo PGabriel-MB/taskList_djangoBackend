@@ -4,7 +4,7 @@ from flask_restful  import Api
 from flask_jwt_extended import JWTManager
 
 from database.db import initialize_db
-from resources.routes import initialize_routes
+from routes import initialize_routes
 from models.User import User
 
 

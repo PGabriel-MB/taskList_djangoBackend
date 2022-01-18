@@ -1,7 +1,9 @@
+import imp
 from flask_bcrypt import check_password_hash, generate_password_hash
 
 from database.db import db
 from .Base import BaseModel
+from .TaskList import TaskList
 
 
 class User(BaseModel):
@@ -21,3 +23,6 @@ class User(BaseModel):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+
+User.register_delete_rule(TaskList, 'created_by', db.CASCADE)
