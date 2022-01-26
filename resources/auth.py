@@ -1,10 +1,14 @@
 from os import access
-from flask import json, request, Response, jsonify
+from flask import json, request, Response
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token
+from itsdangerous import exc
+from mongoengine.errors import FieldDoesNotExist, NotUniqueError, DoesNotExist
 import datetime
 
 from models.User import User
+from resources.errors import SchemaValidationError, EmailAlreadyExistsError, \
+    UnauthorizedError, InternalServerError
 
 
 class SignUpApi(Resource):
@@ -36,34 +40,40 @@ class SignUpApi(Resource):
             user = User(**body)
             user.hash_password()
             user.save()
-        
+            id = user.id
+            return {'id': str(id)}, 200
+        except FieldDoesNotExist:
+            raise SchemaValidationError
+        except NotUniqueError:
+            raise EmailAlreadyExistsError
         except Exception as err:
             return {'message': 'There was an error saving your data!', 'error': f'{err.args}'}
-
-        id = user.id
-
-        return {'id': str(id)}, 200
 
 
 class SignInApi(Resource):
     def post(self):
-        body = request.get_json()
-        user = User.objects(email=body.get('email')).first()
+        try:
+            body = request.get_json()
+            user = User.objects(email=body.get('email')).first()
 
-        if not user:
-            return {'error': 'Unidentified user'}
+            if not user:
+                return {'error': 'Unidentified user'}
 
-        authorized = user.check_password(body.get('password'))
+            authorized = user.check_password(body.get('password'))
 
-        if not authorized:
-            return {'error': 'Email or password invalid'}, 401
-        
-        expires = datetime.timedelta(days=7)
-        access_token = create_access_token(identity=str(user.id), expires_delta=expires)
+            if not authorized:
+                return {'error': 'Email or password invalid'}, 401
+            
+            expires = datetime.timedelta(days=7)
+            access_token = create_access_token(identity=str(user.id), expires_delta=expires)
 
-        obj = {
-            'token': access_token,
-            'user': user,
-            'isAuthenticated': True
-        }
-        return Response(json.dumps(obj), mimetype="application/json", status=200)
+            obj = {
+                'token': access_token,
+                'user': user,
+                'isAuthenticated': True
+            }
+            return Response(json.dumps(obj), mimetype="application/json", status=200)
+        except (UnauthorizedError, DoesNotExist):
+            raise UnauthorizedError
+        except Exception as err:
+            raise InternalServerError
