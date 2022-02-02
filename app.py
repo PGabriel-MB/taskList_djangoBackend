@@ -16,7 +16,7 @@ bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 app.config['MONGODB_SETTINGS'] = {
-    'host': 'mongodb+srv://adminPGabriel:adminPGabriel@cluster0.pgpdg.mongodb.net/taskListIonic?retryWrites=true&w=majority'
+    'host': 'mongodb+srv://adminPGabriel:adminPGabriel@cluster0.pgpdg.mongodb.net/taskListDB?retryWrites=true&w=majority'
 }
 
 initialize_db(app)
