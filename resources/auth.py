@@ -41,7 +41,7 @@ class SignUpApi(Resource):
             user.hash_password()
             user.save()
             id = user.id
-            return {'id': str(id)}, 200
+            return {'id': str(id), 'message': 'User registered succesfully!'}, 200
         except FieldDoesNotExist:
             raise SchemaValidationError
         except NotUniqueError:
