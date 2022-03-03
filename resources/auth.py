@@ -14,7 +14,6 @@ from resources.errors import SchemaValidationError, EmailAlreadyExistsError, \
 class SignUpApi(Resource):
 
     def is_valid_email(self, email):
-
         if not'@' in email:
             return False
         
@@ -66,6 +65,9 @@ class SignInApi(Resource):
             
             expires = datetime.timedelta(days=7)
             access_token = create_access_token(identity=str(user.id), expires_delta=expires)
+
+            # Not to send the password
+            user.password = None
 
             obj = {
                 'token': access_token,

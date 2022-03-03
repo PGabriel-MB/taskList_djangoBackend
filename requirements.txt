@@ -4,3 +4,4 @@ flask-restful
 flask-bcrypt
 flask-jwt-extended
 flask-cors
+flask-mail
