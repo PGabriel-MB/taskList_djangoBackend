@@ -52,4 +52,31 @@ class ResetPassword(Resource):
         url = request.host_url + 'reset/'
 
         try:
-        except SchemaValidationError
+            body = request.get_json()
+            reset_token = body.get('reset_token')
+            password = body.get('password')
+
+            if not reset_token or not password:
+                raise SchemaValidationError
+
+            user_id = decode_token(reset_token)['identity']
+
+            user = User.objects.get(id=user_id)
+
+            user.modify(password=password)
+            user.hash_password()
+            user.save()
+
+            return send_email('[Movie-bag] Password reset successful',
+                              sender='support@movie-bag.com',
+                              recipients=[user.email],
+                              text_body='Password reset was successful',
+                              html_body='<p>Password reset was successful</p>')
+        except SchemaValidationError:
+            raise SchemaValidationError
+        except ExpiredSignatureError:
+            raise ExpiredTokenError
+        except (DecodeError, InvalidTokenError):
+            raise BadTokenErrorr
+        except Exception as e:
+            raise InternalServerError
