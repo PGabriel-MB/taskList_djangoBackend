@@ -7,7 +7,7 @@ from jwt.exceptions import ExpiredSignatureError, DecodeError, InvalidTokenError
 from models.User import User
 from resources.errors import (
     SchemaValidationError, InternalServerError,
-    EmailDoesnotExistsError, BadTokenErrorr
+    EmailDoesnotExistsError, BadTokenError
 )
 from services.mail_service import send_email
 
@@ -77,6 +77,6 @@ class ResetPassword(Resource):
         except ExpiredSignatureError:
             raise ExpiredTokenError
         except (DecodeError, InvalidTokenError):
-            raise BadTokenErrorr
+            raise BadTokenError
         except Exception as e:
             raise InternalServerError

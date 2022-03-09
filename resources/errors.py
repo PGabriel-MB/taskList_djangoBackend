@@ -34,6 +34,12 @@ class EmailAlreadyExistsError(Exception):
 class UnauthorizedError(Exception):
     ...
 
+class EmailDoesnotExistsError(Exception):
+    pass
+
+class BadTokenError(Exception):
+    pass
+
 errors = {
     "InternalServerError": {
         "message": "Something went wrong",
@@ -82,5 +88,13 @@ errors = {
     "UnauthorizedError": {
         "message": "Invalid username or password",
         "status": 401
-    }
+    },
+    "EmailDoesnotExistsError": {
+         "message": "Couldn't find the user with given email address",
+         "status": 400
+     },
+     "BadTokenError": {
+         "message": "Invalid token",
+         "status": 403
+      }
 }

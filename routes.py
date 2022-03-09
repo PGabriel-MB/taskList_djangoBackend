@@ -1,5 +1,6 @@
 from resources.task import TaskApi, TasksApi
 from resources.auth import SignUpApi, SignInApi
+from resources.reset_password import ForgotPassword, ResetPassword
 
 
 def initialize_routes(api):
@@ -8,3 +9,6 @@ def initialize_routes(api):
 
     api.add_resource(TasksApi, '/tasks')
     api.add_resource(TaskApi, '/task/<id>')
+
+    api.add_resource(ForgotPassword, '/api/auth/forgot')
+    api.add_resource(ForgotPassword, '/api/auth/reset')
