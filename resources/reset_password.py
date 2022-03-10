@@ -7,7 +7,7 @@ from jwt.exceptions import ExpiredSignatureError, DecodeError, InvalidTokenError
 from models.User import User
 from resources.errors import (
     SchemaValidationError, InternalServerError,
-    EmailDoesnotExistsError, BadTokenError
+    EmailDoesnotExistsError, BadTokenError, ExpiredTokenError
 )
 from services.mail_service import send_email
 
